@@ -1,0 +1,53 @@
+/*
+ * BankAccount.idl    CICS IIOP ORB sample program
+ * This is the idl definition of the classes for the bank account sample
+ */
+ 
+module bank
+{
+  struct BankData {
+    long acnum;
+    string custname;
+    string custaddr;
+    long balance;
+  };
+ 
+  // this interface is used to manage the bank accounts
+  interface BankAccount {
+    exception ACCOUNT_ERROR { long errcode; string message;};
+ 
+    // query methods
+    long querybalance(in long acnum) raises (ACCOUNT_ERROR);
+    string queryname(in long acnum) raises (ACCOUNT_ERROR);
+    string queryaddress(in long acnum) raises (ACCOUNT_ERROR);
+ 
+    // setter methods
+    void setbalance(in long acnum, in long balance) raises (ACCOUNT_ERROR);
+    void setaddress(in long acnum, in string address) raises (ACCOUNT_ERROR);
+ 
+    // credit check
+    string creditcheck(in long acnum) raises (ACCOUNT_ERROR);
+ 
+    // create a new account
+    void initialise(in long acnum, in long balance, in string name, \
+                              in string address) 
+      raises (ACCOUNT_ERROR);
+ 
+    // create a new account using a structure for the input
+    void initialise2(in bank::BankData allofit) raises (ACCOUNT_ERROR);
+ 
+    // get all data back in a single structure
+    bank::BankData getalldata(in long acnum) raises (ACCOUNT_ERROR);
+  };
+};
+module bank
+{
+  // this interface obtains a list of all bank accounts
+  // by being called multiple times
+  interface BankAccountList {
+    exception END_OF_LIST { long errcode;};
+ 
+    // Return next valid accountnumber after this one
+    long browse(in long acnum) raises (END_OF_LIST);
+  };
+};
