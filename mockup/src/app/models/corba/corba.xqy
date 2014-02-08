@@ -20,7 +20,7 @@ module namespace mod = "',$ns,'" at "',$m,'";
 declare variable $request as element(corba:request) external;
 mod:',$operation,'($request)')
   return
-    if ("oneway" == $operationType) then
+    if ("oneway" = $operationType) then
       (: invoke async :)
       xdmp:spawn(
           $code,(fn:QName($ns,"request"),$request),
